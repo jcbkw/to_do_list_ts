@@ -92,25 +92,18 @@
     
     function createToDoListItem (todoItem) {
         
-        var checkElement,
-            deleteElement,
-            deleteColumn,
-            editElement,
-            editColumn,
-            checkColumn,
-            column,
-            row,
-            todoMessage,
-            listText;
+        var checkElement = document.createElement("button"),
+            listText = document.createTextNode(todoItem.message);
+            deleteElement = document.createElement("button"),
+            deleteColumn = document.createElement("button"),
+            todoMessage = document.createElement("span"),
+            column = document.createElement("div"),
+            row = document.createElement("li"),
+            editElement = document.createElement("button"),
+            editColumn = document.createElement("div"),
+            checkColumn = document.createElement("div");
         
-        row = document.createElement("li");       
-        listText = document.createTextNode(todoItem.message);
-        checkElement = document.createElement("button");
-        deleteElement = document.createElement("button");
-        editElement = document.createElement("button");
-        column = document.createElement("div");
-        todoMessage = document.createElement("span");
-
+        
         row.classList.add("row", "light-primary-color");
         column.classList.add("col");
         todoMessage.classList.add("item-message");
@@ -128,15 +121,15 @@
         deleteColumn = checkColumn.cloneNode(true);
         editColumn = checkColumn.cloneNode(true);
 
-        todoMessage.appendChild(listText);
-        column.appendChild(todoMessage);
-        checkColumn.appendChild(checkElement);
-        deleteColumn.appendChild(deleteElement);
-        editColumn.appendChild(editElement);
-        row.appendChild(checkColumn);
-        row.appendChild(column);
-        row.appendChild(editColumn);
-        row.appendChild(deleteColumn);
+        // todoMessage.appendChild(listText);
+        // column.appendChild(todoMessage);
+        // checkColumn.appendChild(checkElement);
+        // deleteColumn.appendChild(deleteElement);
+        // editColumn.appendChild(editElement);
+        // row.appendChild(checkColumn);
+        // row.appendChild(column);
+        // row.appendChild(editColumn);
+        // row.appendChild(deleteColumn);
         
         if (todoItem.status === STATUS_DONE) {
                 

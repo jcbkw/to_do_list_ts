@@ -16,9 +16,17 @@ System.register([], function (exports_1, context_1) {
                 Layout.prototype.getClass = function () {
                     return this.el;
                 };
+                Layout.prototype.getTemplate = function (url) {
+                    var _this = this;
+                    var xml = new XMLHttpRequest;
+                    xml.addEventListener("load", function (e) {
+                        _this.dom.body.innerHTML = xml.responseText;
+                    }, false);
+                    xml.open("GET", url);
+                    xml.send();
+                };
                 Layout.prototype.render = function () {
-                    this.el = this.dom.createElement("main");
-                    this.dom.body.appendChild(this.el);
+                    this.getTemplate("/assets/templates/Layout.html");
                 };
                 return Layout;
             }());
