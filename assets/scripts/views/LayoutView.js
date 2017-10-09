@@ -20,7 +20,6 @@ System.register([], function (exports_1, context_1) {
                 LayoutView.prototype.updateTemplate = function () {
                     var templateSetup = this.data;
                     this.dom.body.innerHTML = templateSetup.data.content;
-                    ;
                 };
                 LayoutView.prototype.getContent = function (contentdata) {
                     this.content = contentdata;

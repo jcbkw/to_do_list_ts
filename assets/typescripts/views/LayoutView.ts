@@ -16,7 +16,7 @@ export class LayoutView {
     public updateTemplate ():void {
 
          let templateSetup = this.data;
-         this.dom.body.innerHTML = templateSetup.data.content);
+         this.dom.body.innerHTML = templateSetup.data.content;
         
     }
     
