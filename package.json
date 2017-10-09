@@ -26,5 +26,8 @@
   "devDependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2"
+  },
+  "dependencies": {
+    "@types/handlebars": "^4.0.36"
   }
 }

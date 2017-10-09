@@ -3,6 +3,7 @@
         "module": "system",
         "target": "es5",
         "outDir": "assets/scripts",
-        "rootDir": "assets/typescripts"
+        "rootDir": "assets/typescripts",
+        "sourceMap": true
     }
 }
