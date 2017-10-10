@@ -1,7 +1,7 @@
-System.register(["./services/DataService", "./views/LayoutView", "./views/TodoListView"], function (exports_1, context_1) {
+System.register(["./services/DataService", "./views/LayoutView"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var DataService_1, LayoutView_1, TodoListView_1, TodoListController;
+    var DataService_1, LayoutView_1, TodoListController;
     return {
         setters: [
             function (DataService_1_1) {
@@ -9,9 +9,6 @@ System.register(["./services/DataService", "./views/LayoutView", "./views/TodoLi
             },
             function (LayoutView_1_1) {
                 LayoutView_1 = LayoutView_1_1;
-            },
-            function (TodoListView_1_1) {
-                TodoListView_1 = TodoListView_1_1;
             }
         ],
         execute: function () {
@@ -20,15 +17,32 @@ System.register(["./services/DataService", "./views/LayoutView", "./views/TodoLi
                     this.dom = dom;
                 }
                 TodoListController.prototype.render = function () {
-                    var _this = this;
-                    var url = "./assets/templates/layout.html";
-                    var callback = function () {
-                        var layout = new LayoutView_1.LayoutView(_this.dom, data), mainView = new TodoListView_1.TodoListView(layout);
-                    };
-                    var data = new DataService_1.DataService(url, callback);
-                    //data.getTemplate(, function (){});
+                    this.loadExternals(this.start.bind(this));
                 };
                 ;
+                TodoListController.prototype.start = function (externals) {
+                    var layout = new LayoutView_1.LayoutView(this.dom, externals);
+                    layout.render();
+                };
+                TodoListController.prototype.loadExternals = function (callback) {
+                    DataService_1.DataService.getTemplate("./assets/templates/layout.html", function (layoutTpl) {
+                        DataService_1.DataService.getTemplate("./assets/templates/listItem.html", function (listItemTpl) {
+                            DataService_1.DataService.getTemplate("./assets/templates/list.html", function (listTpl) {
+                                DataService_1.DataService.getContacts(function (contact) {
+                                    DataService_1.DataService.getContent(function (content) {
+                                        callback({
+                                            listItemTpl: listItemTpl,
+                                            layoutTpl: layoutTpl,
+                                            listTpl: listTpl,
+                                            contacts: contact,
+                                            content: content
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                };
                 return TodoListController;
             }());
             exports_1("TodoListController", TodoListController);

@@ -1,37 +1,30 @@
-import{DataService} from "../services/DataService"
+import { TodoListView } from "./TodoListView";
+
 export class LayoutView {
 
-    constructor (private dom: Document, private data: DataService) {
-        this.render();
-    }
+    constructor (private dom: Document, private externals: Externals) {}
     
     public getElement (): Element {
         return this.el;    
     }
 
-    public getClass (): Element {
-        return this.el;    
-    }
+    public render (): void {
 
-    public updateTemplate ():void {
-
-         let templateSetup = this.data;
-         this.dom.body.innerHTML = templateSetup.data.content;
+        this.updateTemplate();
         
+        let list = new TodoListView(this.el.querySelector('.main-content'), this.externals);
+        
+        list.render();
+
     }
     
-    public getContent (contentdata: string): void {
-        this.content = contentdata;
-        let compiledtmlp = Handlebars.compile(this.template);
-               
-    }
-
-    private render (): void {
-        
-        this.updateTemplate();
+    private updateTemplate (): void {
+        let template = Handlebars.compile(this.externals.layoutTpl);
+        let html = template (this.externals.content);
+        this.dom.body.innerHTML = html;
+        this.el = this.dom.body.querySelector('.main-wrapper');
     }
 
     private el: Element;
-    private template: string;
-    private content: string;
+    
 }

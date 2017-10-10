@@ -1,17 +1,43 @@
-export class TodoListView implements IView {
+import { TodoListItemView } from "./TodoListItemView";
+
+export class TodoListView {
     
-    constructor (private parent: IView) {
-        this.render();
+    constructor (private parent: Element, private externals: Externals) {
+        this.itemTemplate = Handlebars.compile(this.externals.listItemTpl);
     }
     
-    public getElement(): Element {
-        return this.el;
+    public getElement (): Element {
+        return this.parent;    
     }
-    // Maybe I can use map and the REST parameters to dynamically create
-    //dom elements on the fly for the render function.
-    private render(): void {
-       let main = this.parent.getElement();
+
+    public render (): void {
+
+        this.updateTemplate();
+
+        Object.getOwnPropertyNames(this.externals.contacts).forEach((id: string) => {
+            
+            this.renderContact(this.externals.contacts[id]);
+
+        });
+        
+    }
+
+    public renderContact (contact: IContact) {
+
+        let item = new TodoListItemView(this.el, this.itemTemplate);
+        
+        item.render(contact);
+
+    }
+    
+    private updateTemplate (): void {
+        let template = Handlebars.compile(this.externals.listTpl);
+        let html = template (this.externals.content);
+        this.parent.innerHTML += html;
+        this.el = this.parent.querySelector('.entry-list');
     }
 
     private el: Element;
+    private itemTemplate: HandlebarsTemplateDelegate;
+
 }

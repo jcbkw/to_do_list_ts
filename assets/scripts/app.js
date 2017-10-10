@@ -9,10 +9,7 @@ System.register(["./TodoListController"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            (function () {
-                var controller = new TodoListController_1.TodoListController(document);
-                controller.render();
-            })();
+            (new TodoListController_1.TodoListController(document)).render();
         }
     };
 });

@@ -1,43 +1,52 @@
 export class DataService {
     
-    public data: {template: string, content: string};
-    
-    constructor (private url: string, callback: Function) {
+    public static getTemplate (url:string, callback: (json: any) => any) {
         
-        this.getTemplate(url, callback);
-        this.data =  {template: "", content: ""};
+        DataService.getText(url, callback);
         
-    };
-    
-    public getTemplate (url:string, callback: Function) {
-        let xhr = new XMLHttpRequest;
+    }
+
+    public static getContent (callback: (json: any) => any) {
         
-        xhr.addEventListener("load", (e) => {
-            this.data.template =  xhr.responseText;
-            this.getContent(callback);
+        DataService.getJson("/content.json", callback);
+        
+    }
+   
+    public static getContacts (callback: (contacts: IContactMap) => any) {
+        
+        DataService.getJson("/entries", function (contacts: object) {
+
+            callback(contacts as IContactMap);
             
-        }, false);
-        
-        xhr.open("GET", url, true /*async*/);
-        xhr.send();
+        });
         
     }
     
-    private getContent (callback: Function) {
-        
+    private static getJson (url: string, callback: (json: any) => any) {
+
+        DataService.getText(url, function (text: string) {
+            
+            callback(JSON.parse(text));
+                        
+        });
+
+    }
+
+    private static getText (url: string, callback: (text: String) => any) {
+
         let xhr = new XMLHttpRequest;
         
-        xhr.addEventListener("load", (e) => {
-            console.log(xhr);
-            let compiledTPL = Handlebars.compile(this.data.template);
-            this.data.content = compiledTPL(JSON.parse(xhr.responseText));
-            //console.log(update);            
-            debugger;
-            callback();
+        xhr.addEventListener("load", function (e) {
+            callback(this.responseText);
         }, false);
-        
-        xhr.open("GET", "/content.json", true /*async*/);
+
+        xhr.addEventListener("error", function (e) {
+            callback(null);
+        }, false); 
+
+        xhr.open("GET", url, true /*async*/);
         xhr.send();
+
     }
   
 }

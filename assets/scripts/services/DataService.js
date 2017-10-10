@@ -6,34 +6,33 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             DataService = /** @class */ (function () {
-                function DataService(url, callback) {
-                    this.url = url;
-                    this.getTemplate(url, callback);
-                    this.data = { template: "", content: "" };
+                function DataService() {
                 }
-                ;
-                DataService.prototype.getTemplate = function (url, callback) {
-                    var _this = this;
+                DataService.getTemplate = function (url, callback) {
+                    DataService.getText(url, callback);
+                };
+                DataService.getContent = function (callback) {
+                    DataService.getJson("/content.json", callback);
+                };
+                DataService.getContacts = function (callback) {
+                    DataService.getJson("/entries", function (contacts) {
+                        callback(contacts);
+                    });
+                };
+                DataService.getJson = function (url, callback) {
+                    DataService.getText(url, function (text) {
+                        callback(JSON.parse(text));
+                    });
+                };
+                DataService.getText = function (url, callback) {
                     var xhr = new XMLHttpRequest;
                     xhr.addEventListener("load", function (e) {
-                        _this.data.template = xhr.responseText;
-                        _this.getContent(callback);
+                        callback(this.responseText);
+                    }, false);
+                    xhr.addEventListener("error", function (e) {
+                        callback(null);
                     }, false);
                     xhr.open("GET", url, true /*async*/);
-                    xhr.send();
-                };
-                DataService.prototype.getContent = function (callback) {
-                    var _this = this;
-                    var xhr = new XMLHttpRequest;
-                    xhr.addEventListener("load", function (e) {
-                        console.log(xhr);
-                        var compiledTPL = Handlebars.compile(_this.data.template);
-                        _this.data.content = compiledTPL(JSON.parse(xhr.responseText));
-                        //console.log(update);            
-                        debugger;
-                        callback();
-                    }, false);
-                    xhr.open("GET", "/content.json", true /*async*/);
                     xhr.send();
                 };
                 return DataService;
