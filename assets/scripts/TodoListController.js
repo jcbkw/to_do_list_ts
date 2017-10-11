@@ -1,7 +1,7 @@
-System.register(["./services/DataService", "./views/LayoutView"], function (exports_1, context_1) {
+System.register(["./services/DataService", "./views/LayoutView", "./models/MessageMap", "./services/ErrorService"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var DataService_1, LayoutView_1, TodoListController;
+    var DataService_1, LayoutView_1, MessageMap_1, ErrorService_1, TodoListController;
     return {
         setters: [
             function (DataService_1_1) {
@@ -9,6 +9,12 @@ System.register(["./services/DataService", "./views/LayoutView"], function (expo
             },
             function (LayoutView_1_1) {
                 LayoutView_1 = LayoutView_1_1;
+            },
+            function (MessageMap_1_1) {
+                MessageMap_1 = MessageMap_1_1;
+            },
+            function (ErrorService_1_1) {
+                ErrorService_1 = ErrorService_1_1;
             }
         ],
         execute: function () {
@@ -23,19 +29,43 @@ System.register(["./services/DataService", "./views/LayoutView"], function (expo
                 TodoListController.prototype.start = function (externals) {
                     var layout = new LayoutView_1.LayoutView(this.dom, externals);
                     layout.render();
+                    this.watchEvents(layout, externals);
+                };
+                TodoListController.prototype.watchEvents = function (layout, externals) {
+                    layout
+                        .on('new_entry', function (e) {
+                        DataService_1.DataService.createMessage(e.detail.value, function (message) {
+                            if (!message) {
+                                ErrorService_1.ErrorService.broadcast("Sorry, we could not save your message.\n                            'Please try again later!");
+                            }
+                            else {
+                                externals.messages.put(message);
+                            }
+                        });
+                    })
+                        .on('delete_entry', function (e) {
+                        DataService_1.DataService.deleteMessage(e.detail.value, function (message) {
+                            if (!message) {
+                                ErrorService_1.ErrorService.broadcast("Sorry, we could not delete your message.\n                            'Please try again later!");
+                            }
+                            else {
+                                externals.messages.remove(message.id);
+                            }
+                        });
+                    });
                 };
                 TodoListController.prototype.loadExternals = function (callback) {
                     DataService_1.DataService.getTemplate("./assets/templates/layout.html", function (layoutTpl) {
                         DataService_1.DataService.getTemplate("./assets/templates/listItem.html", function (listItemTpl) {
                             DataService_1.DataService.getTemplate("./assets/templates/list.html", function (listTpl) {
-                                DataService_1.DataService.getContacts(function (contact) {
+                                DataService_1.DataService.getMessages(function (messages) {
                                     DataService_1.DataService.getContent(function (content) {
                                         callback({
                                             listItemTpl: listItemTpl,
                                             layoutTpl: layoutTpl,
                                             listTpl: listTpl,
-                                            contacts: contact,
-                                            content: content
+                                            content: content,
+                                            messages: new MessageMap_1.MessageMap(messages)
                                         });
                                     });
                                 });

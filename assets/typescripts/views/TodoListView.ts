@@ -1,4 +1,6 @@
 import { TodoListItemView } from "./TodoListItemView";
+import { IMessage } from "../models/IMessage";
+import { Externals } from "../models/IExternals";
 
 export class TodoListView {
     
@@ -13,16 +15,18 @@ export class TodoListView {
     public render (): void {
 
         this.updateTemplate();
-
-        Object.getOwnPropertyNames(this.externals.contacts).forEach((id: string) => {
-            
-            this.renderContact(this.externals.contacts[id]);
-
-        });
         
+        let messages = this.externals.messages;
+
+        for (let i = 0, c = messages.size(); i < c; i += 1) {
+
+            this.renderContact(messages.getMessageAtIndex(i));
+
+        }
+
     }
 
-    public renderContact (contact: IContact) {
+    public renderContact (contact: IMessage) {
 
         let item = new TodoListItemView(this.el, this.itemTemplate);
         
@@ -31,10 +35,18 @@ export class TodoListView {
     }
     
     private updateTemplate (): void {
-        let template = Handlebars.compile(this.externals.listTpl);
-        let html = template (this.externals.content);
-        this.parent.innerHTML += html;
-        this.el = this.parent.querySelector('.entry-list');
+        if (this.el) {
+            this.el.innerHTML = '';
+        }
+        else {
+            let template = Handlebars.compile(this.externals.listTpl);
+            let html = template (this.externals.content);
+            this.parent.innerHTML += html;
+            this.el = this.parent.querySelector('.entry-list');
+
+            // link this class to the model
+            this.externals.messages.on('change', this.render.bind(this));
+        }
     }
 
     private el: Element;

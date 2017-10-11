@@ -19,21 +19,28 @@ System.register(["./TodoListItemView"], function (exports_1, context_1) {
                     return this.parent;
                 };
                 TodoListView.prototype.render = function () {
-                    var _this = this;
                     this.updateTemplate();
-                    Object.getOwnPropertyNames(this.externals.contacts).forEach(function (id) {
-                        _this.renderContact(_this.externals.contacts[id]);
-                    });
+                    var messages = this.externals.messages;
+                    for (var i = 0, c = messages.size(); i < c; i += 1) {
+                        this.renderContact(messages.getMessageAtIndex(i));
+                    }
                 };
                 TodoListView.prototype.renderContact = function (contact) {
                     var item = new TodoListItemView_1.TodoListItemView(this.el, this.itemTemplate);
                     item.render(contact);
                 };
                 TodoListView.prototype.updateTemplate = function () {
-                    var template = Handlebars.compile(this.externals.listTpl);
-                    var html = template(this.externals.content);
-                    this.parent.innerHTML += html;
-                    this.el = this.parent.querySelector('.entry-list');
+                    if (this.el) {
+                        this.el.innerHTML = '';
+                    }
+                    else {
+                        var template = Handlebars.compile(this.externals.listTpl);
+                        var html = template(this.externals.content);
+                        this.parent.innerHTML += html;
+                        this.el = this.parent.querySelector('.entry-list');
+                        // link this class to the model
+                        this.externals.messages.on('change', this.render.bind(this));
+                    }
                 };
                 return TodoListView;
             }());

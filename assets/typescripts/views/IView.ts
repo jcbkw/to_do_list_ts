@@ -1,3 +1,0 @@
-interface IView {
-    getElement():Element;
-}
