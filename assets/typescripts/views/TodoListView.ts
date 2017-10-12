@@ -18,6 +18,8 @@ export class TodoListView {
         
         let messages = this.externals.messages;
 
+        this.messageViews = {};
+
         for (let i = 0, c = messages.size(); i < c; i += 1) {
 
             this.renderContact(messages.getMessageAtIndex(i));
@@ -26,12 +28,18 @@ export class TodoListView {
 
     }
 
-    public renderContact (contact: IMessage) {
+    public renderContact (message: IMessage) {
 
         let item = new TodoListItemView(this.el, this.itemTemplate);
         
-        item.render(contact);
+        item.render(message);
 
+        this.messageViews[message.id] = item;
+
+    }
+
+    public getItemView (id: string) : TodoListItemView|null {
+        return this.messageViews[id] || null;
     }
     
     private updateTemplate (): void {
@@ -51,5 +59,6 @@ export class TodoListView {
 
     private el: Element;
     private itemTemplate: HandlebarsTemplateDelegate;
+    private messageViews: {[messageId: string]: TodoListItemView};
 
 }

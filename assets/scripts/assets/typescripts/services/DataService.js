@@ -30,7 +30,6 @@ System.register([], function (exports_1, context_1) {
                         var compiledTPL = Handlebars.compile(_this.data.template);
                         _this.data.content = compiledTPL(JSON.parse(xhr.responseText));
                         //console.log(update);            
-                        debugger;
                         callback();
                     }, false);
                     xhr.open("GET", "/content.json", true /*async*/);

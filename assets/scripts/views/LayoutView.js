@@ -1,4 +1,4 @@
-System.register(["./TodoListView", "../utils/EventDispatcher"], function (exports_1, context_1) {
+System.register(["./TodoListView", "../utils/EventDispatcher", "../models/MessageStatus"], function (exports_1, context_1) {
     "use strict";
     var __extends = (this && this.__extends) || (function () {
         var extendStatics = Object.setPrototypeOf ||
@@ -11,7 +11,7 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
         };
     })();
     var __moduleName = context_1 && context_1.id;
-    var TodoListView_1, EventDispatcher_1, LayoutView;
+    var TodoListView_1, EventDispatcher_1, MessageStatus_1, LayoutView;
     return {
         setters: [
             function (TodoListView_1_1) {
@@ -19,6 +19,9 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
             },
             function (EventDispatcher_1_1) {
                 EventDispatcher_1 = EventDispatcher_1_1;
+            },
+            function (MessageStatus_1_1) {
+                MessageStatus_1 = MessageStatus_1_1;
             }
         ],
         execute: function () {
@@ -35,8 +38,8 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
                 };
                 LayoutView.prototype.render = function () {
                     this.updateTemplate();
-                    var list = new TodoListView_1.TodoListView(this.el.querySelector('.main-content'), this.externals);
-                    list.render();
+                    this.list = new TodoListView_1.TodoListView(this.el.querySelector('.main-content'), this.externals);
+                    this.list.render();
                 };
                 LayoutView.prototype.updateTemplate = function () {
                     if (!this.el) {
@@ -45,9 +48,9 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
                         this.dom.body.innerHTML = html;
                         this.el = this.dom.body.querySelector('.main-wrapper');
                         // attach to dom
-                        debugger;
                         this.el.addEventListener('submit', this.handleSubmit.bind(this), false);
                         this.el.addEventListener('click', this.handleClicks.bind(this), false);
+                        this.el.addEventListener('change', this.handleChanges.bind(this), false);
                     }
                 };
                 LayoutView.prototype.handleSubmit = function (e) {
@@ -56,18 +59,28 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
                     this.trigger('new_entry', { value: e.target.message.value });
                 };
                 LayoutView.prototype.handleClicks = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
                     var target = e.target;
                     var id = this.findMessageId(target);
                     if (target.classList.contains('delete-item')) {
                         this.trigger('delete_entry', { value: id });
                     }
                     else if (target.classList.contains('check-item')) {
-                        this.trigger('update_entry', { value: this.externals.messages.getMessageById(id) });
+                        var message = this.externals.messages.getMessageById(id);
+                        // toggle the message status before sending it to the server
+                        message.status = (new MessageStatus_1.MessageStatus(message.status)).toggle();
+                        this.trigger('update_entry', { value: message });
                     }
                     else if (target.classList.contains('edit-item')) {
+                        this.list.getItemView(id).editMode(true);
                     }
+                };
+                LayoutView.prototype.handleChanges = function (e) {
+                    var target = e.target;
+                    var id = this.findMessageId(target);
+                    var message = this.externals.messages.getMessageById(id);
+                    // toggle the message status before sending it to the server
+                    message.message = target.value;
+                    this.trigger('update_entry', { value: message });
                 };
                 LayoutView.prototype.findMessageId = function (target) {
                     while (true) {

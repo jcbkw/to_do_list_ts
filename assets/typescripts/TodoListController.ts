@@ -34,7 +34,6 @@ export class TodoListController {
 
         layout
             .on('new_entry', (e: CustomEvent) => {
-                debugger;
                 DataService.createMessage(e.detail.value, (message: IMessage) => {
                     if (!message) {
                         ErrorService.broadcast(`Sorry, we could not save your message.
@@ -58,6 +57,18 @@ export class TodoListController {
             })
             .on('update_entry', (e: CustomEvent) => {
 
+                DataService.updateMessage(e.detail.value, (message: IMessage) => {
+                    if (!message) {
+                        ErrorService.broadcast(`Sorry, we could not save your message.
+                            'Please try again later!`);
+                    }
+                    else {
+                        externals.messages.put(message);
+                    }
+                });
+            })
+            .on('edit_entry', (e: CustomEvent) => {
+                
                 let message = e.detail.value as IMessage;
 
                 // toggle the message status before sending it to the server

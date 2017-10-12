@@ -18,9 +18,9 @@ export class LayoutView extends EventDispatcher {
 
         this.updateTemplate();
         
-        let list = new TodoListView(this.el.querySelector('.main-content'), this.externals);
+        this.list = new TodoListView(this.el.querySelector('.main-content'), this.externals);
         
-        list.render();
+        this.list.render();
 
     }
     
@@ -32,9 +32,10 @@ export class LayoutView extends EventDispatcher {
             this.el = this.dom.body.querySelector('.main-wrapper');
 
             // attach to dom
-            debugger;
+            
             this.el.addEventListener('submit', this.handleSubmit.bind(this), false);
             this.el.addEventListener('click',  this.handleClicks.bind(this), false);
+            this.el.addEventListener('change',  this.handleChanges.bind(this), false);
         }
     }
 
@@ -46,8 +47,6 @@ export class LayoutView extends EventDispatcher {
     }
 
     private handleClicks (e: Event) {
-        e.stopPropagation();
-        e.preventDefault();
         
         let target: Element = e.target as Element;
         let id = this.findMessageId(target);
@@ -56,13 +55,34 @@ export class LayoutView extends EventDispatcher {
             this.trigger('delete_entry', {value: id});
         }
         else if (target.classList.contains('check-item')) {
-            this.trigger('update_entry', {value: this.externals.messages.getMessageById(id)});
+
+            let message = this.externals.messages.getMessageById(id);
+            
+            // toggle the message status before sending it to the server
+            message.status = (new MessageStatus(message.status)).toggle();
+
+            this.trigger('update_entry', {value: message});
         }
         else if (target.classList.contains('edit-item')) {
-
+            this.list.getItemView(id).editMode(true);
         }
 
     }
+
+    private handleChanges (e: Event) {
+
+        let target: HTMLInputElement = e.target as HTMLInputElement;
+        let id = this.findMessageId(target);
+        let message = this.externals.messages.getMessageById(id);
+        
+        // toggle the message status before sending it to the server
+        message.message = target.value;
+
+        this.trigger('update_entry', {value: message});
+
+    }
+        
+
 
     private findMessageId (target: Element): string {
 
@@ -85,5 +105,6 @@ export class LayoutView extends EventDispatcher {
     }
 
     private el: Element;
+    private list: TodoListView;
     
 }

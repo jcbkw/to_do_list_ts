@@ -37,7 +37,6 @@ System.register(["./services/DataService", "./views/LayoutView", "./models/Messa
                 TodoListController.prototype.watchEvents = function (layout, externals) {
                     layout
                         .on('new_entry', function (e) {
-                        debugger;
                         DataService_1.DataService.createMessage(e.detail.value, function (message) {
                             if (!message) {
                                 ErrorService_1.ErrorService.broadcast("Sorry, we could not save your message.\n                            'Please try again later!");
@@ -58,6 +57,16 @@ System.register(["./services/DataService", "./views/LayoutView", "./models/Messa
                         });
                     })
                         .on('update_entry', function (e) {
+                        DataService_1.DataService.updateMessage(e.detail.value, function (message) {
+                            if (!message) {
+                                ErrorService_1.ErrorService.broadcast("Sorry, we could not save your message.\n                            'Please try again later!");
+                            }
+                            else {
+                                externals.messages.put(message);
+                            }
+                        });
+                    })
+                        .on('edit_entry', function (e) {
                         var message = e.detail.value;
                         // toggle the message status before sending it to the server
                         message.status = (new MessageStatus_1.MessageStatus(message.status)).toggle();

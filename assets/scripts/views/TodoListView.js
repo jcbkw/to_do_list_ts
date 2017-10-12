@@ -21,13 +21,18 @@ System.register(["./TodoListItemView"], function (exports_1, context_1) {
                 TodoListView.prototype.render = function () {
                     this.updateTemplate();
                     var messages = this.externals.messages;
+                    this.messageViews = {};
                     for (var i = 0, c = messages.size(); i < c; i += 1) {
                         this.renderContact(messages.getMessageAtIndex(i));
                     }
                 };
-                TodoListView.prototype.renderContact = function (contact) {
+                TodoListView.prototype.renderContact = function (message) {
                     var item = new TodoListItemView_1.TodoListItemView(this.el, this.itemTemplate);
-                    item.render(contact);
+                    item.render(message);
+                    this.messageViews[message.id] = item;
+                };
+                TodoListView.prototype.getItemView = function (id) {
+                    return this.messageViews[id] || null;
                 };
                 TodoListView.prototype.updateTemplate = function () {
                     if (this.el) {
