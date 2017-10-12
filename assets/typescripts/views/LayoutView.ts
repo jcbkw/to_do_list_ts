@@ -52,7 +52,11 @@ export class LayoutView extends EventDispatcher {
         let id = this.findMessageId(target);
         
         if (target.classList.contains('delete-item')) {
-            this.trigger('delete_entry', {value: id});
+            if (confirm("Are you sure that you want delete this item?")) {
+                
+                this.trigger('delete_entry', {value: id});
+                
+            }
         }
         else if (target.classList.contains('check-item')) {
 

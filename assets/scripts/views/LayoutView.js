@@ -62,7 +62,9 @@ System.register(["./TodoListView", "../utils/EventDispatcher", "../models/Messag
                     var target = e.target;
                     var id = this.findMessageId(target);
                     if (target.classList.contains('delete-item')) {
-                        this.trigger('delete_entry', { value: id });
+                        if (confirm("Are you sure that you want delete this item?")) {
+                            this.trigger('delete_entry', { value: id });
+                        }
                     }
                     else if (target.classList.contains('check-item')) {
                         var message = this.externals.messages.getMessageById(id);
