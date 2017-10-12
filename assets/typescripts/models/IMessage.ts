@@ -1,8 +1,8 @@
-import {MessageStatus} from "MessageStatus"
+import {MessageStatusType} from "MessageStatus"
 
 export interface IMessage extends Object {
     "lastModified": number,
     "message": string,
-    "status": MessageStatus,
+    "status": MessageStatusType,
     "id": string
 }

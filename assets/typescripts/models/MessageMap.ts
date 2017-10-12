@@ -19,6 +19,17 @@ export class MessageMap extends EventDispatcher {
         }
         this.trigger('change');
     }
+
+    public patch (message: IMessage) {
+        let index = this.findIndex(message.id);
+        if (index !== -1) {
+            
+            this.data[index].status =  2 ? 1 : 2;
+
+        }
+      
+        this.trigger('change');
+    }
     
     public remove (message: IMessage|string) {
         let id = typeof message === 'string' ? message : message.id;
@@ -38,7 +49,6 @@ export class MessageMap extends EventDispatcher {
         return this.data.length;
     }
     
-    // unused
     public getMessageById (id: string): IMessage {
         return this.data[this.findIndex(id)];
     }

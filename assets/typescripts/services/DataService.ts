@@ -40,6 +40,22 @@ export class DataService {
         
     }
 
+    public static updateMessage (updatedMessage: IMessage, callback: (message: IMessage) => any) {
+        
+        DataService.xhrGeneric("PUT", "/entries", function (error: Error, result: string) {
+
+            let message: IMessage = null;
+
+            if (!error) {
+                message = JSON.parse(result) as IMessage;
+            }
+
+            callback(message);
+            
+        }, updatedMessage);
+        
+    }
+    
     public static deleteMessage (messageId: string, callback: (message: IMessage) => any) {
         
         DataService.xhrGeneric("DELETE", "/entries", function (error: Error, result: string) {

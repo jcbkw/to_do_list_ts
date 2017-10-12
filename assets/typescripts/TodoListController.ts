@@ -1,9 +1,10 @@
-import { DataService } from "./services/DataService";
-import { LayoutView } from "./views/LayoutView";
+import { DataService } from "./services/DataService";// Class manages data XMLHTTPRequests to the server.
+import { LayoutView } from "./views/LayoutView";// Manages the base html boilerplate and broadcasts DOM events.
 import { MessageMap } from "./models/MessageMap";
 import { IMessage } from "./models/IMessage";
 import { Externals } from "./models/IExternals";
 import { ErrorService } from "./services/ErrorService";
+import { MessageStatus } from "./models/MessageStatus";
 
 declare global {
     interface Window { externals: any; }
@@ -33,6 +34,7 @@ export class TodoListController {
 
         layout
             .on('new_entry', (e: CustomEvent) => {
+                debugger;
                 DataService.createMessage(e.detail.value, (message: IMessage) => {
                     if (!message) {
                         ErrorService.broadcast(`Sorry, we could not save your message.
@@ -51,6 +53,23 @@ export class TodoListController {
                     }
                     else {
                         externals.messages.remove(message.id);
+                    }
+                });
+            })
+            .on('update_entry', (e: CustomEvent) => {
+
+                let message = e.detail.value as IMessage;
+
+                // toggle the message status before sending it to the server
+                message.status = (new MessageStatus(message.status)).toggle();
+
+                DataService.updateMessage(message, (message: IMessage) => {
+                    if (!message) {
+                        ErrorService.broadcast(`Sorry, we could not save your message.
+                            'Please try again later!`);
+                    }
+                    else {
+                        externals.messages.put(message);
                     }
                 });
             });
