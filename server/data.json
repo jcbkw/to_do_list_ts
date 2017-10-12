@@ -1,26 +1,14 @@
 {
-    "15bfd3a85a5": {
-        "lastModified": 1494684561564,
-        "message": "Nice",
-        "status": 0,
-        "id": "15bfd3a85a5"
-    },
-    "15bfd47ec8d": {
-        "lastModified": 1494684563001,
-        "message": "Watch the today show",
-        "status": 0,
-        "id": "15bfd47ec8d"
-    },
     "15bfd511486": {
-        "lastModified": 1494684564205,
+        "lastModified": 1507821688899,
         "message": "Say Yeah!",
         "status": 0,
         "id": "15bfd511486"
     },
     "15bfd516fa1": {
-        "lastModified": 1494684364305,
+        "lastModified": 1507821892590,
         "message": "Complete edit feature in the project",
-        "status": 0,
+        "status": 2,
         "id": "15bfd516fa1"
     }
 }

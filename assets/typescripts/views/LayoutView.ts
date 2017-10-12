@@ -2,6 +2,7 @@ import { TodoListView } from "./TodoListView";
 import { Externals } from "../models/IExternals";
 import { EventDispatcher } from "../utils/EventDispatcher";
 import { IMessage } from "../models/IMessage";
+import { MessageStatus } from "../models/MessageStatus";
 
 export class LayoutView extends EventDispatcher {
 
@@ -31,6 +32,7 @@ export class LayoutView extends EventDispatcher {
             this.el = this.dom.body.querySelector('.main-wrapper');
 
             // attach to dom
+            debugger;
             this.el.addEventListener('submit', this.handleSubmit.bind(this), false);
             this.el.addEventListener('click',  this.handleClicks.bind(this), false);
         }
@@ -48,13 +50,13 @@ export class LayoutView extends EventDispatcher {
         e.preventDefault();
         
         let target: Element = e.target as Element;
-
+        let id = this.findMessageId(target);
+        
         if (target.classList.contains('delete-item')) {
-            var id = this.findMessageId(target);
             this.trigger('delete_entry', {value: id});
         }
         else if (target.classList.contains('check-item')) {
-            
+            this.trigger('update_entry', {value: this.externals.messages.getMessageById(id)});
         }
         else if (target.classList.contains('edit-item')) {
 

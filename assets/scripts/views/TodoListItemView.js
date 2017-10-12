@@ -13,10 +13,10 @@ System.register([], function (exports_1, context_1) {
                 TodoListItemView.prototype.getElement = function () {
                     return this.el;
                 };
-                TodoListItemView.prototype.render = function (contact) {
-                    var html = this.template(contact);
+                TodoListItemView.prototype.render = function (message) {
+                    var html = this.template(message);
                     this.parent.innerHTML += html;
-                    this.el = this.parent.querySelector("[item-id=\"" + contact.id + "\"]");
+                    this.el = this.parent.querySelector("[item-id=\"" + message.id + "\"]");
                 };
                 return TodoListItemView;
             }());

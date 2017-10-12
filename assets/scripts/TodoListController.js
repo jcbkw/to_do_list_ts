@@ -1,7 +1,7 @@
-System.register(["./services/DataService", "./views/LayoutView", "./models/MessageMap", "./services/ErrorService"], function (exports_1, context_1) {
+System.register(["./services/DataService", "./views/LayoutView", "./models/MessageMap", "./services/ErrorService", "./models/MessageStatus"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var DataService_1, LayoutView_1, MessageMap_1, ErrorService_1, TodoListController;
+    var DataService_1, LayoutView_1, MessageMap_1, ErrorService_1, MessageStatus_1, TodoListController;
     return {
         setters: [
             function (DataService_1_1) {
@@ -15,6 +15,9 @@ System.register(["./services/DataService", "./views/LayoutView", "./models/Messa
             },
             function (ErrorService_1_1) {
                 ErrorService_1 = ErrorService_1_1;
+            },
+            function (MessageStatus_1_1) {
+                MessageStatus_1 = MessageStatus_1_1;
             }
         ],
         execute: function () {
@@ -34,6 +37,7 @@ System.register(["./services/DataService", "./views/LayoutView", "./models/Messa
                 TodoListController.prototype.watchEvents = function (layout, externals) {
                     layout
                         .on('new_entry', function (e) {
+                        debugger;
                         DataService_1.DataService.createMessage(e.detail.value, function (message) {
                             if (!message) {
                                 ErrorService_1.ErrorService.broadcast("Sorry, we could not save your message.\n                            'Please try again later!");
@@ -50,6 +54,19 @@ System.register(["./services/DataService", "./views/LayoutView", "./models/Messa
                             }
                             else {
                                 externals.messages.remove(message.id);
+                            }
+                        });
+                    })
+                        .on('update_entry', function (e) {
+                        var message = e.detail.value;
+                        // toggle the message status before sending it to the server
+                        message.status = (new MessageStatus_1.MessageStatus(message.status)).toggle();
+                        DataService_1.DataService.updateMessage(message, function (message) {
+                            if (!message) {
+                                ErrorService_1.ErrorService.broadcast("Sorry, we could not save your message.\n                            'Please try again later!");
+                            }
+                            else {
+                                externals.messages.put(message);
                             }
                         });
                     });

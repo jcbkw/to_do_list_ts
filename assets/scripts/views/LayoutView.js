@@ -45,6 +45,7 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
                         this.dom.body.innerHTML = html;
                         this.el = this.dom.body.querySelector('.main-wrapper');
                         // attach to dom
+                        debugger;
                         this.el.addEventListener('submit', this.handleSubmit.bind(this), false);
                         this.el.addEventListener('click', this.handleClicks.bind(this), false);
                     }
@@ -58,11 +59,12 @@ System.register(["./TodoListView", "../utils/EventDispatcher"], function (export
                     e.stopPropagation();
                     e.preventDefault();
                     var target = e.target;
+                    var id = this.findMessageId(target);
                     if (target.classList.contains('delete-item')) {
-                        var id = this.findMessageId(target);
                         this.trigger('delete_entry', { value: id });
                     }
                     else if (target.classList.contains('check-item')) {
+                        this.trigger('update_entry', { value: this.externals.messages.getMessageById(id) });
                     }
                     else if (target.classList.contains('edit-item')) {
                     }

@@ -8,10 +8,10 @@ export class TodoListItemView {
         return this.el;
     }
 
-    public render (contact: IMessage): void {
-        let html = this.template(contact);
+    public render (message: IMessage): void {
+        let html = this.template(message);
         this.parent.innerHTML += html;
-        this.el = this.parent.querySelector(`[item-id="${contact.id}"]`);
+        this.el = this.parent.querySelector(`[item-id="${message.id}"]`);
     }
     
     private el: Element;

@@ -36,6 +36,13 @@ System.register(["../utils/EventDispatcher"], function (exports_1, context_1) {
                     }
                     this.trigger('change');
                 };
+                MessageMap.prototype.patch = function (message) {
+                    var index = this.findIndex(message.id);
+                    if (index !== -1) {
+                        this.data[index].status = 2 ? 1 : 2;
+                    }
+                    this.trigger('change');
+                };
                 MessageMap.prototype.remove = function (message) {
                     var id = typeof message === 'string' ? message : message.id;
                     var index = this.findIndex(id);
@@ -50,7 +57,6 @@ System.register(["../utils/EventDispatcher"], function (exports_1, context_1) {
                 MessageMap.prototype.size = function () {
                     return this.data.length;
                 };
-                // unused
                 MessageMap.prototype.getMessageById = function (id) {
                     return this.data[this.findIndex(id)];
                 };

@@ -28,6 +28,15 @@ System.register([], function (exports_1, context_1) {
                         callback(message);
                     }, { message: messageText });
                 };
+                DataService.updateMessage = function (updatedMessage, callback) {
+                    DataService.xhrGeneric("PUT", "/entries", function (error, result) {
+                        var message = null;
+                        if (!error) {
+                            message = JSON.parse(result);
+                        }
+                        callback(message);
+                    }, updatedMessage);
+                };
                 DataService.deleteMessage = function (messageId, callback) {
                     DataService.xhrGeneric("DELETE", "/entries", function (error, result) {
                         var message = null;
